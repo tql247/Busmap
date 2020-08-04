@@ -5,6 +5,7 @@ var express = require('express');
 const path = require("path");
 var app = express();
 var request = require('request');
+const PORT = process.env.PORT || 5000
 
 
 
@@ -39,7 +40,7 @@ router.post("/getRoute", (req, res) => {
 
 app.use("/", router);
 app.use("/assets", express.static(__dirname + "/views/assets"))
-app.listen(process.env.PORT || 3004);
+app.listen(PORT);
 
 
 
