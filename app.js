@@ -39,7 +39,7 @@ router.post("/getRoute", (req, res) => {
 
 app.use("/", router);
 app.use("/assets", express.static(__dirname + "/views/assets"))
-app.listen(process.env.PORT || 0004);
+app.listen(process.env.PORT || 3004);
 
 
 

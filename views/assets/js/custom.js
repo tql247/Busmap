@@ -1,4 +1,5 @@
 var listBusStop = []
+var updateTrackingInterval = null
 
 fetch('assets/others/response.json')
     .then(response => {
@@ -43,7 +44,11 @@ function openInfoTab(busId) {
     var classInfo = document.querySelector('.info').classList
     if (classInfo.value.indexOf('active') > -1)
         classInfo.add('active')
+    
     getPredict(busId)
+    setInterval(function() {
+        getPredict(busId)
+    }, 5000)
 }
 
 
@@ -82,7 +87,7 @@ function showResult(data) {
     
 
     data.forEach(p => {
-        console.log(p)
+        // console.log(p)
         var upNext = null
         var next = null
 
@@ -115,24 +120,23 @@ function showResult(data) {
         `
 
         var upNextHTML = document.createElement('td')
+        upNextHTML.setAttribute('class', 'info-body-value text-center')
         upNextHTML.innerHTML = `
-            <td class="info-body-value">
-                <div class="info-body-value-main">${upNext?upNext.min:'-'} phut</div>
-                <div>
-                    <span>${upNext?upNext.len:'-'}m</span>
-                    <span>${upNext?upNext.v:'-'}km/h</span>
-            </td>
+            <div class="info-body-value-main">${upNext?(upNext.min < 1?'<1':upNext.min) + ' phut':'-'}</div>
+            <div>
+                <span>${upNext?upNext.len:'-'}m</span>
+                <span>${upNext?upNext.v:'-'}km/h</span>
+            </div>
         `
 
         var nextHTML = document.createElement('td')
+        nextHTML.setAttribute('class', 'info-body-value text-center')
         nextHTML.innerHTML = `
-            <td class="info-body-value">
-                <div class="info-body-value-main">${next?next.min:'-'} phut</div>
-                <div>
-                    <span>${next?next.len:'-'}m</span>
-                    <span>${next?next.v:'-'}km/h</span>
-                </div>
-            </td>
+            <div class="info-body-value-main">${next?(next.min < 1? '<1':next.min) + ' phut':'-'}</div>
+            <div>
+                <span>${next?next.len + ' m':'-'}</span>
+                <span>${next?next.v + ' km/h':'-'}</span>
+            </div>
         `
 
         var aRowValue = document.createElement('tr')
@@ -142,6 +146,14 @@ function showResult(data) {
 
         document.querySelector('.table-body').appendChild(aRowValue)
 
+
+        document.querySelector('.status').innerHTML = 'Vua cap nhat'
+        document.querySelector('.status').classList.remove('loading')
+
+        setTimeout(function() {
+            document.querySelector('.status').innerHTML = 'Loading'
+            document.querySelector('.status').classList.add('loading')
+        }, 1000)
     })
 }
 
