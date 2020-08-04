@@ -151,9 +151,9 @@ function showResult(data) {
         document.querySelector('.status').classList.remove('loading')
 
         setTimeout(function() {
-            document.querySelector('.status').innerHTML = 'Loading'
+            document.querySelector('.status').innerHTML = 'Loading...'
             document.querySelector('.status').classList.add('loading')
-        }, 1000)
+        }, 2000)
     })
 }
 
