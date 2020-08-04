@@ -48,7 +48,7 @@ function openInfoTab(busId) {
     getPredict(busId)
     setInterval(function() {
         getPredict(busId)
-    }, 5000)
+    }, 30000)
 }
 
 
