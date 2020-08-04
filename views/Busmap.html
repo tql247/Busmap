@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busmap</title>
+    <link rel="icon" type="image/png" href="assets/images/busIcon.png"/>
+    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@100;200;300;400;500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Recursive:wght@100;200;300;400;500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital@1&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Fira+Sans:ital@1&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courgette&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500&family=Recursive:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Petrona:ital,wght@1,300;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+    <link href="assets/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500;600&display=swap" rel="stylesheet">
+    <script src = "assets/fonts/fontawesome.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="assets/js/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<style>
+    .info {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 0%;
+        background-color: rgb(244, 255, 248);
+        z-index: 1000;
+        transition: ease-in-out 0.3s;
+    }
+
+    .info.active {
+        width: 600px;
+        transition: ease-in-out 0.3s;
+    }
+
+    .info-context{
+        display: none;
+    }
+
+    .info.active .info-context{
+        display: block;
+    }
+
+    .close-btn{
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        cursor: pointer;
+    }
+
+    .info-body{
+        display: flex;
+        justify-content: space-between;
+        position: absolute;
+        width: 550px;
+        top: 10px;
+        left: 20px;
+    }
+
+    .info-body-header {
+        font-family: 'Comfortaa';
+        font-size: 20px;    
+    }
+
+    .info-body-value{
+        font-size: 16px;
+        font-weight: 300;
+        font-family: 'Ubuntu';
+    }
+
+    .info-body-value-main {
+        font-size: 30px;
+        font-weight: 400;
+    }
+    
+</style>
+<body style="margin: 0;height: 100vh; width: 100vw">
+    
+    <div class="info active">
+        <div class="info-context" style="width: 100%; height: 100%;">
+            <div onclick="closeInfoTab()" class="close-btn"><i class="mdi mdi-close icon-small"></i></div>
+            <div class="info-body">
+                <div style="width: 50%;">
+                    <div class="info-body-header">
+                        Tuyen
+                    </div>
+                    <br>
+                    <div class="route-col">
+                        
+                    </div>
+                </div>
+                <div>
+                    <div class="info-body-header">
+                        Sap den
+                    </div>
+                    <br>
+                    <div class="up-next-col"></div>
+                </div>
+                <div>
+                    <div class="info-body-header">
+                        Tiep theo
+                    </div>
+                    <br>
+                    <div class="next-col"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="map" style="height: 100%; width: 100%;"></div>
+
+    <script>
+        var listBusStop = []
+
+        fetch('assets/others/response.json')
+            .then(response => {
+                return response.text()
+            })
+            .then(data => {
+                listBusStop = JSON.parse(data)
+                listBusStop.forEach(element => {
+                    drawBusIcon(element.Lat, element.Lng, element.StopId)
+                });
+            }
+        );
+
+
+        var map = L.map('map').setView([10.771254010200892, 106.6937255859375], 15);
+    
+
+        L.tileLayer('https://api.maptiler.com/maps/basic/256/{z}/{x}/{y}.png?key=ZjnF5DtrJH6EhRRFG4WN', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var busICon = L.icon({
+            iconUrl: '/assets/images/busIcon.png',
+            // shadowUrl: 'leaf-shadow.png',
+            
+            iconSize:     [30, 30], // size of the icon
+            // shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [22, 22], // point of the icon which will correspond to marker's location
+            // shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+        });
+
+        // L.marker([10.771254010200892, 106.6937255859375], {icon: greenIcon}).addTo(map);
+
+        function drawBusIcon (lat, lng, busId) {
+            L.marker([lat, lng], {icon: busICon}).addTo(map).on('click', function() {
+                handleCloseAndOpenInfoTab(busId)
+            })
+        }
+
+        function handleCloseAndOpenInfoTab(busId) {
+            var classInfo = document.querySelector('.info').classList
+            if (classInfo.value.indexOf('active') > -1) {
+            }
+            else {
+                // classInfo.add('active')
+            }
+            getPredict(busId)
+        }
+
+        function closeInfoTab() {
+            // var classInfo = document.querySelector('.info').classList
+            // classInfo.remove('active')
+
+        }
+
+        function getPredict(idStop) {
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+            var urlencoded = new URLSearchParams();
+            urlencoded.append("id", idStop);
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: urlencoded,
+                redirect: 'follow'
+            };
+
+            fetch("/getRoute", requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                showResult(JSON.parse(result))
+            })
+            .catch(error => console.log('error', error));
+        }
+
+        function showResult(data) {
+            document.querySelector('.route-col').innerHTML = ''
+            document.querySelector('.up-next-col').innerHTML = ''
+            document.querySelector('.next-col').innerHTML = ''
+
+            data.forEach(p => {
+                console.log(p)
+                var upNext = null
+                var next = null
+                
+
+                var busId = p.rNo;
+                var destination = p.rN;
+                if (p.arrs[0]) {
+                    upNext = {
+                        min: Math.floor(p.arrs[0].t/60),
+                        len: Math.floor(p.arrs[0].d),
+                        v: Math.floor(p.arrs[0].s)
+                    }
+                } 
+            
+                if (p.arrs[1]) {
+                    next = {
+                        min: Math.floor(p.arrs[1].t/60),
+                        len: Math.floor(p.arrs[1].d),
+                        v: Math.floor(p.arrs[1].s)
+                    }
+                } 
+                
+
+                var routeHTML = `
+                    <div class="info-body-value route">
+                        <div class="info-body-value-main">${busId}</div>
+                        <div>${destination}</div>
+                    </div>
+                    <hr>
+                `
+
+                var routeDIV = document.createElement('div')
+                routeDIV.innerHTML = routeHTML
+                document.querySelector('.route-col').append(routeDIV)
+
+                var up = document.createElement('div')
+                
+                if (upNext) {
+                    up.innerHTML = `
+                        <div class="info-body-value up-next">
+                            <div class="info-body-value-main">${upNext.min} phut</div>
+                            <div>
+                                <span>${upNext.len} m</span>
+                                <span>${upNext.v} + km/h</span>
+                            </div>
+                        </div>
+                        <hr>
+                    `
+                } else {
+                    up.innerHTML = `
+                        <div class="info-body-value up-next">
+                            <div class="info-body-value-main"></div>
+                            <div>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <hr>
+                    `
+                }
+
+                document.querySelector('.up-next-col').appendChild(up)
+
+                var next = document.createElement('div')
+
+                if (next) {
+                    next.innerHTML = `
+                        <div class="info-body-value next">
+                            <div class="info-body-value-main">${next.min} phut</div>
+                            <div>
+                                <span>${next.len}m</span>
+                                <span>${next.v}km/h</span>
+                            </div>
+                        </div>
+                        <hr>
+                    `
+
+                } else {
+                    up.innerHTML = `
+                        <div class="info-body-value up-next">
+                            <div class="info-body-value-main"></div>
+                            <div>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <hr>
+                    `
+                }
+
+                document.querySelector('.next-col').appendChild(up)
+
+            })
+        }
+
+        // map.on('click', function(e) {
+        //     console.log(e.latlng.lat,e.latlng.lng);
+        // })
+    </script>
+</body>
+</html>
