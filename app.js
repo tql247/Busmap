@@ -1,7 +1,11 @@
+require('dotenv').config();
+
+
 var express = require('express');
 const path = require("path");
 var app = express();
 var request = require('request');
+
 
 
 app.use(express.json());
@@ -35,9 +39,8 @@ router.post("/getRoute", (req, res) => {
 
 app.use("/", router);
 app.use("/assets", express.static(__dirname + "/views/assets"))
-app.listen(process.env.port || 3001);
+app.listen(process.env.PORT || 0004);
 
-console.log("Running at Port 3001");
 
 
 module.exports = app;
