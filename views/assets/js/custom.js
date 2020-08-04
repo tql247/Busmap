@@ -13,7 +13,7 @@ fetch('assets/others/response.json')
     });
 
 
-var map = L.map('map').setView([10.771254010200892, 106.6937255859375], 15);
+var map = L.map('map').setView([10.762147480023952, 106.70059204101564], 12);
 
 
 L.tileLayer('https://api.maptiler.com/maps/basic/256/{z}/{x}/{y}.png?key=ZjnF5DtrJH6EhRRFG4WN', {
@@ -41,12 +41,14 @@ function drawBusIcon (lat, lng, busId) {
 
 
 function openInfoTab(busId) {
+    if (updateTrackingInterval) clearInterval(updateTrackingInterval)
+
     var classInfo = document.querySelector('.info').classList
-    if (classInfo.value.indexOf('active') > -1)
+    if (classInfo.value.indexOf('active') === -1)
         classInfo.add('active')
     
     getPredict(busId)
-    setInterval(function() {
+    updateTrackingInterval = setInterval(function() {
         getPredict(busId)
     }, 30000)
 }
@@ -124,8 +126,8 @@ function showResult(data) {
         upNextHTML.innerHTML = `
             <div class="info-body-value-main">${upNext?(upNext.min < 1?'<1':upNext.min) + ' phut':'-'}</div>
             <div>
-                <span>${upNext?upNext.len:'-'}m</span>
-                <span>${upNext?upNext.v:'-'}km/h</span>
+                <span>${upNext?upNext.len + 'm':'-'}</span>
+                <span>${upNext?upNext.v + 'km/h':'-'}</span>
             </div>
         `
 
@@ -134,8 +136,8 @@ function showResult(data) {
         nextHTML.innerHTML = `
             <div class="info-body-value-main">${next?(next.min < 1? '<1':next.min) + ' phut':'-'}</div>
             <div>
-                <span>${next?next.len + ' m':'-'}</span>
-                <span>${next?next.v + ' km/h':'-'}</span>
+                <span>${next?next.len + 'm':'-'}</span>
+                <span>${next?next.v + 'km/h':'-'}</span>
             </div>
         `
 
