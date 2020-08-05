@@ -1,7 +1,7 @@
 var listBusStop = []
 var updateTrackingInterval = null
 
-fetch('assets/others/pretier.json')
+fetch('assets/others/response.json')
     .then(response => {
         return response.text()
     })
