@@ -1,20 +1,18 @@
 var listBusStop = []
 var updateTrackingInterval = null
 
-fetch('assets/others/response.json')
+fetch('assets/others/pretier.json')
     .then(response => {
         return response.text()
     })
     .then(data => {
         listBusStop = JSON.parse(data)
-        listBusStop.forEach(element => {
-            drawBusIcon(element.Lat, element.Lng, element.StopId)
-        });
+        showBusIcon(busIConSmall)
     });
 
 
 var map = L.map('map').setView([10.762147480023952, 106.70059204101564], 12);
-
+var lsMarker = []
 
 L.tileLayer('https://api.maptiler.com/maps/basic/256/{z}/{x}/{y}.png?key=ZjnF5DtrJH6EhRRFG4WN', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -33,9 +31,32 @@ var busICon = L.icon({
 });
 
 
-function drawBusIcon (lat, lng, busId) {
-    L.marker([lat, lng], {icon: busICon}).addTo(map).on('click', function() {
+var busIConSmall = L.icon({
+    iconUrl: '/assets/images/busIcon.png',
+    iconSize:     [10, 10], 
+    iconAnchor:   [22, 22],
+    popupAnchor:  [-3, -76]
+});
+
+function drawBusIcon (lat, lng, busId, iconType) {
+    var marker = L.marker([lat, lng], {icon: iconType})
+    
+    marker.addTo(map).on('click', function() {
         openInfoTab(busId)
+    })
+
+    lsMarker.push(marker)
+}
+
+function showBusIcon(iconType) {
+    listBusStop.forEach(element => {
+        drawBusIcon(element.Lat, element.Lng, element.StopId, iconType)
+    });
+}
+
+function clearAllMarker() {
+    lsMarker.forEach(p=> {
+        map.removeLayer(p)
     })
 }
 
@@ -158,6 +179,18 @@ function showResult(data) {
         }, 2000)
     })
 }
+
+map.on('zoom', function() {
+    if (map.getZoom() > 15) {
+        clearAllMarker()
+        showBusIcon(busICon)
+    }
+    else {
+        clearAllMarker()
+        showBusIcon(busIConSmall)
+
+    }
+})
 
 // map.on('click', function(e) {
 //     console.log(e.latlng.lat,e.latlng.lng);
