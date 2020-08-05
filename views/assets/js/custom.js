@@ -1,14 +1,14 @@
 var listBusStop = []
 var updateTrackingInterval = null
 
-fetch('assets/others/response.json')
-    .then(response => {
-        return response.text()
-    })
-    .then(data => {
-        listBusStop = JSON.parse(data)
-        showBusIcon(busIConSmall)
-    });
+// fetch('assets/others/response.json')
+//     .then(response => {
+//         return response.text()
+//     })
+//     .then(data => {
+//         listBusStop = JSON.parse(data)
+//         showBusIcon(busIConSmall)
+//     });
 
 
 var map = L.map('map').setView([10.762147480023952, 106.70059204101564], 12);
