@@ -430,6 +430,9 @@ function filtBus() {
     showListBus(tempListBus)
 }
 
+
+getListBus()
+
 map.on('zoom', function() {
     if (map.getZoom() > 15) {
         clearAllMarker()
