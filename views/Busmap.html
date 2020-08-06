@@ -16,55 +16,76 @@
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Petrona:ital,wght@1,300;1,400&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lemonada:wght@500&display=swap" rel="stylesheet">
     <link href="assets/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@500;600&display=swap" rel="stylesheet">
     <script src = "assets/fonts/fontawesome.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
     <link rel="stylesheet" href="assets/css/custom.css">
     <link rel="stylesheet" href="assets/css/main.css">
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
     <script src="assets/js/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- bulma -->
+    <!-- axios -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
 </head>
 <body style="margin: 0;height: 100vh; width: 100vw">
     
-    <div class="info">
-        <div class="info-context" style="width: 100%; height: 100%;">
-            <div onclick="closeInfoTab()" class="close-btn"><i class="mdi mdi-close icon-small"></i></div>
-            <div class="status loading" align="center">Loading...</div>
-            <div style="width: 90%; position: absolute; left: 10px; top: 40px;">
-                <table style="width: 100%;">
-                    <thead class="table-header">
-                        <tr>
-                            <th style="width: 50%;">
-                                Tuyen
-                            </th>
-                            <th style="width: 20%;">
-                                Sap den
-                            </th>
-                            <th style="width: 20%;">
-                                Tiep theo
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
-                <hr>
-                <div style="max-height: calc(100vh - 100px); overflow: scroll;">
-                    <table style="width: 100%;">
-                        <thead class="table-header">
-                            <tr>
-                                <th style="width: 50%;">
-                                </th>
-                                <th style="width: 20%;">
-                                </th>
-                                <th style="width: 20%;">
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-body">
-                        </tbody>
-                    </table>
+    <div>
+        <div onclick="openInfoTab()" class="open-btn"><i class="mdi mdi-plus icon-small"></i></div>
+        <div class="info active">
+            <div class="info-context" style="width: 100%; height: 100%;">
+                <div onclick="closeInfoTab()" class="close-btn active"><i class="mdi mdi-close icon-small"></i></div>
+                <div>
+                    <!-- navs bar -->
+                    <div class="navs">
+                        <div class="navs-title active" onclick="getListBus()">
+                            Xem tuyến
+                        </div>
+                        <!-- <div class="navs-title">
+                            Dẫn đường
+                        </div> -->
+                        <div class="navs-title" onclick="viewWaitingTime()">
+                            Thời gian chờ
+                        </div>
+                    </div>
+                    <!-- navs content -->
+                    <br>
+                    <div>
+                        <div id="bus-list" class="navs-content active">
+                            <div class="input-text" >
+                                <i class="mdi mdi-magnify icon"></i>
+                                <input id="search-bus-id" type="text" onkeyup="filtBus()">
+                            </div>
+                            <div class="list-bus">
+                            </div>
+                        </div>
+                        <div id="predict-waiting"  class="navs-content">
+                            <div class="status loading" align="center"></div>
+                            <div class="predict-table">
+                                <div style="width: 100%;">
+                                    <div class="table-header">
+                                        <div style="display: flex;">
+                                            <div style="width: 50%;">
+                                                Tuyen
+                                            </div>
+                                            <div style="width: 25%;">
+                                                Sap den
+                                            </div>
+                                            <div style="width: 25%;">
+                                                Tiep theo
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="table-body" style="max-height: calc(100vh - 100px); overflow: scroll;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

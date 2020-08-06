@@ -26,10 +26,62 @@ router.get("/about", (req, res) => {
   res.sendFile(path.join(__dirname + '/views/about.html'))
 })
 
-router.post("/getRoute", (req, res) => {
+router.post("/getStopInfo", (req, res) => {
   var options = {
     'method': 'GET',
     'url': `http://apicms.ebms.vn/prediction/predictbystopid/${req.body.id}`,
+    'headers': {
+    }
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    res.send(response.body);
+  });
+})
+
+router.get("/getListBus", (req, res) => {
+  var options = {
+    'method': 'GET',
+    'url': `http://apicms.ebms.vn/businfo/getallroute`,
+    'headers': {
+    }
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    res.send(response.body);
+  });
+})
+
+router.post("/getRouteInfo", (req, res) => {
+  var options = {
+    'method': 'GET',
+    'url': `http://apicms.ebms.vn/businfo/getroutebyid/${req.body.id}`,
+    'headers': {
+    }
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    res.send(response.body);
+  });
+})
+
+router.post("/getVarsByRoute", (req, res) => {
+  var options = {
+    'method': 'GET',
+    'url': `http://apicms.ebms.vn/businfo/getvarsbyroute/${req.body.id}`,
+    'headers': {
+    }
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    res.send(response.body);
+  });
+})
+
+router.post("/getPathsByVar", (req, res) => {
+  var options = {
+    'method': 'GET',
+    'url': `http://apicms.ebms.vn/businfo/getpathsbyvar/${req.body.id}/${req.body.var}`,
     'headers': {
     }
   };
