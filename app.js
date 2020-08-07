@@ -5,8 +5,8 @@ var express = require('express');
 const path = require("path");
 var app = express();
 var request = require('request');
-// const PORT = 5000
-const PORT = process.env.PORT || 5000
+const PORT = 5000
+// const PORT = process.env.PORT || 5000
 
 
 
@@ -89,6 +89,26 @@ router.post("/getPathsByVar", (req, res) => {
     if (error) throw new Error(error);
     res.send(response.body);
   });
+})
+
+router.post("/sendgps", (req, res) => {
+  var latlng = req.body.latlng || 'nothing'
+  console.log(latlng);
+  var message = {
+    mess: `You send ${latlng}`
+  }
+
+  res.send(message);
+  // var options = {
+  //   'method': 'GET',
+  //   'url': `http://apicms.ebms.vn/businfo/getpathsbyvar/${req.body.id}/${req.body.var}`,
+  //   'headers': {
+  //   }
+  // };
+  // request(options, function (error, response) {
+  //   if (error) throw new Error(error);
+  //   res.send(response.body);
+  // });
 })
 
 app.use("/", router);

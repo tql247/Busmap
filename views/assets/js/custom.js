@@ -5,6 +5,7 @@ var updateTrackingInterval = null
 var selectStop = false
 var pathMarker = []
 var pathMarkerWithRoutID = {}
+var isLoading = false
 
 fetch('assets/others/response.json')
     .then(response => {
@@ -281,6 +282,10 @@ function openRouteOnMap(event) {
 }
 
 function getRouteInfo(RouteId, node) {
+    if(isLoading) return
+    isLoading = true
+
+
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
@@ -328,6 +333,7 @@ function makeInfoHTML (result, node) {
 
     setTimeout(function () {
         div.style.height = div.firstElementChild.clientHeight + 30 + 'px'
+        isLoading = false
     }, 1)
 }
 
