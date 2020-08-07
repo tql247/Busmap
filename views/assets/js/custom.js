@@ -256,6 +256,9 @@ function viewWaitingTime() {
 }
 
 function openRouteOnMap(event) {
+    if(isLoading) return
+    isLoading = true
+
     var node = event.currentTarget.parentNode
     var routeID = event.currentTarget.id.split('-')[1]
     if (node.children.length > 1) {
@@ -273,6 +276,7 @@ function openRouteOnMap(event) {
             drawPath(routeID, pathMarkerWithRoutID[routeID+'back'][1], 'back')
         }
 
+        isLoading = false
         return
     }
 
@@ -282,9 +286,6 @@ function openRouteOnMap(event) {
 }
 
 function getRouteInfo(RouteId, node) {
-    if(isLoading) return
-    isLoading = true
-
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
